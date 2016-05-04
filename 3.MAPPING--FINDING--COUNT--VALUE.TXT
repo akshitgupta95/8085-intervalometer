@@ -1,8 +1,30 @@
-;Start button(from intrrept or port c decoding) will jump to find count
+;Start button(from intrrept or port c decoding) will jump to find count(here)
 
-;------------------TODO:MAKE mapping table at 8000H-------------
+;------------------TODO:Find better method to make mapping table-------------
+LXI H,8000H 
+MVI A,00H
+MOV M,A
+INX H
+MVI A,40
+MOV M,A
+INX H
+MVI A,80
+MOV M,A
+INX H
+MVI A,120
+MOV M,A
+INX H
+MVI A,160
+MOV M,A
+;-----------------------TODO:Complete Mapping table------------------------
+
+
+
+
+
+
 
 FINDCOUNT:  MOV A,B                 ;Count in B
-			Lxi h,8000              ;at 8000h,a mapping table is made
+			Lxi h,8000              ;at 8000h, mapping table
             Mov l,a
 		    Mov a,m                 ;FINAL count FOR 8254 in AC
