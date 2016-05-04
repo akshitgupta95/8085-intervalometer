@@ -1,0 +1,69 @@
+.ORG 0000H
+INIT:   MVI A,80H
+        OUT 083H
+        MVI A,38H
+        CALL CMD
+        MVI A,38H
+        CALL CMD
+        MVI A,38H
+        CALL CMD
+       MVI A,01H
+       CALL CMD
+        MVI A,0CH
+        CALL CMD
+         MVI A,80H
+        CALL CMD
+        
+          MVI A ,41H
+           CALL WR_CHR
+           MVI A,4DH 
+           CALL WR_CHR
+           MVI A,41H 
+           CALL WR_CHR
+           MVI A,4EH 
+           CALL WR_CHR
+         
+         MVI A,C0H
+        CALL CMD
+         MVI A ,59H
+           CALL WR_CHR
+           MVI A,4FH 
+           CALL WR_CHR
+           MVI A,59H 
+           CALL WR_CHR
+           MVI A,4FH 
+           CALL WR_CHR
+           MVI A ,41H
+           CALL WR_CHR
+           MVI A,4BH 
+           CALL WR_CHR
+           MVI A,53H 
+           CALL WR_CHR
+           MVI A,48H 
+           CALL WR_CHR
+           MVI A ,49H
+           CALL WR_CHR
+           MVI A,54H 
+           CALL WR_CHR
+            HLT
+CMD:   OUT 81H
+        MVI A,01H
+        OUT 82H
+       CALL DELAY1
+        MVI A,00H
+        OUT 82H
+        CALL DELAY1
+        RET
+WR_CHR: OUT 81H
+        MVI A,0FH
+        OUT 82H
+       CALL DELAY1       
+ MVI A,02H
+        OUT 82H
+        CALL DELAY1
+        RET
+DELAY1: MVI C,8CH
+LOOP_1: DCR C
+        JNZ LOOP_1
+        RET
+

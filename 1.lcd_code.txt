@@ -1,7 +1,7 @@
-CPU "8085.TBL"
-ORG .2000H
+
+.ORG 2000H
 LXI SP,3FF0H
- 
+
 MVI A,88H  ;8255 intitialization,upper port pc4-pc7 as input
 OUT 83H
  
@@ -66,4 +66,4 @@ LOOP_2: DCR C
  
 MSG_LINE1: DFB "ENTER DELAY",0
 MSG_LINE2: DFB “0  Seconds”,0
-END
+.END
