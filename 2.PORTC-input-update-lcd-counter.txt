@@ -1,7 +1,9 @@
+Version 1.
 MVI B,00H    	;initialize counter on b
 BACK:IN 82H 	; waiting for push button press --PA:Adress of push button switch port(port C)
 	 CMA			;pull down switch reading
      ANI F0H 	;our interest is in upper bits only
+    
      JZ BACK  	;no button pressed
 	;-----Decoding start and up buttoons-------
 	MOV C,A  	;BAckup Register
@@ -15,4 +17,25 @@ BACK:IN 82H 	; waiting for push button press --PA:Adress of push button switch p
 	MOV A,B
 	CALL WR_CHAR ;LCD Subroutine
 
-JUMP BACK  ;check again for button press
+JMP BACK  ;check again for button press
+
+Version 2.
+
+MVI B,30H    	;initialize counter on b, "0" ascii value
+BACK:IN 82H 	; waiting for push button press --PA:Adress of push button switch port(port C)
+     CALL DELAY1 
+     CPI 7FH    ;start button(sw4) pressed
+     JZ NEXTSTEP  	;
+	;-----Decoding start and up buttoons-------
+	CPI EFH		;sw1(up) button pressed
+;---------TODO:handling error cases of 0 count------------------------------------------
+     JNZ BACK
+     INC B  	;increment counter on button press and update lcd(for testing only)
+;------------------TODO:(ascii conversion)-------------
+	MVI A,C0H   ;second line of lcd
+	CALL WR_CMD  ;LCD SUBROUTINE
+	MOV A,B
+	CALL WR_CHAR ;LCD Subroutine
+
+JMP BACK  ;check again for button press
+

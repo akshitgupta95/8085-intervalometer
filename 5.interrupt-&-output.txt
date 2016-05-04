@@ -1,8 +1,9 @@
-
-
+CALL DELAY_VAR
 EI
 MVI A,08H ;enable rst7.5
 SIM
+LOOP:NOP
+    JMP LOOP;blocked in infinite loop,will come out on interrupt 
 
 
 ;---------TODO:monitor program interrupt to jump to output--------------

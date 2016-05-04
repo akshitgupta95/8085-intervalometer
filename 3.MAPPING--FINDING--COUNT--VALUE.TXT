@@ -1,5 +1,5 @@
 ;Start button(from intrrept or port c decoding) will jump to find count(here)
-
+NEXTSTEP:
 ;------------------TODO:Find better method to make mapping table-------------
 LXI H,8000H 
 MVI A,00H

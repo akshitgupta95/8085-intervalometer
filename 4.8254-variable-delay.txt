@@ -1,4 +1,4 @@
-DELAY_1s: MVI A,01110100B   ;counter 1 clock made
+DELAY_VAR: MVI A,01110100B   ;counter 1 clock made
 		OUT 43H				;Control word adress
 		MVI A,010010100B	;counter 2 
 		OUT 43H				;Control word adress
@@ -6,6 +6,6 @@ DELAY_1s: MVI A,01110100B   ;counter 1 clock made
 		OUT 41H
 		MVI A,C3H 			;counter 1 high order bit,total count of counter 1=50,000
 		OUT 41H
-		MVI A,B            ;find count using mapping
+		MOV A,B            ;find count using mapping
 		OUT 42H
 		RET	
