@@ -1,51 +1,43 @@
-.ORG 0000H
-INIT:   MVI A,80H
-        OUT 083H
-        MVI A,38H
+.ORG 2000H
+INIT:   MVI A,88H  ;8255 initialiaztion with upper port C input
+        OUT 83H
+        MVI A,38H  ;LCD intilaization
         CALL CMD
-        MVI A,38H
+        MVI A,38H   ;LCD intilaization
         CALL CMD
-        MVI A,38H
+        MVI A,38H   ;LCD intilaization
         CALL CMD
-       MVI A,01H
+       MVI A,01H     ;LCD intilaization
        CALL CMD
-        MVI A,0CH
+        MVI A,0CH    ;LCD intilaization
         CALL CMD
-         MVI A,80H
+         MVI A,80H   ;Cursor moving to top left adress of lcd
         CALL CMD
         
-          MVI A ,41H
+          MVI A ,44H    ; "D"
            CALL WR_CHR
-           MVI A,4DH 
+           MVI A,45H      ;"E"
            CALL WR_CHR
-           MVI A,41H 
+           MVI A,4CH      ; "L"
            CALL WR_CHR
-           MVI A,4EH 
+           MVI A,44H 
+           CALL WR_CHR
+           MVI A,59H      ;"Y"
+           CALL WR_CHR  
+           MVI A,3AH      ;":"
            CALL WR_CHR
          
-         MVI A,C0H
-        CALL CMD
-         MVI A ,59H
+         MVI A,C0H      ;cursor to 2nd line left
+         CALL CMD
+         MVI A ,30H
            CALL WR_CHR
-           MVI A,4FH 
-           CALL WR_CHR
-           MVI A,59H 
-           CALL WR_CHR
-           MVI A,4FH 
-           CALL WR_CHR
-           MVI A ,41H
-           CALL WR_CHR
-           MVI A,4BH 
+           MVI A,20H 
            CALL WR_CHR
            MVI A,53H 
            CALL WR_CHR
-           MVI A,48H 
-           CALL WR_CHR
-           MVI A ,49H
-           CALL WR_CHR
-           MVI A,54H 
-           CALL WR_CHR
-            HLT
+           
+          HLT
+
 CMD:   OUT 81H
         MVI A,01H
         OUT 82H
@@ -54,14 +46,16 @@ CMD:   OUT 81H
         OUT 82H
         CALL DELAY1
         RET
+        
 WR_CHR: OUT 81H
         MVI A,0FH
         OUT 82H
        CALL DELAY1       
- MVI A,02H
+        MVI A,02H
         OUT 82H
         CALL DELAY1
         RET
+
 DELAY1: MVI C,8CH
 LOOP_1: DCR C
         JNZ LOOP_1
