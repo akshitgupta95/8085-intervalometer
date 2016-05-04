@@ -2,17 +2,17 @@
 INIT:   MVI A,88H  ;8255 initialiaztion with upper port C input
         OUT 83H
         MVI A,38H  ;LCD intilaization
-        CALL CMD
+        CALL WR_CMD
         MVI A,38H   ;LCD intilaization
-        CALL CMD
+        CALL WR_CMD
         MVI A,38H   ;LCD intilaization
-        CALL CMD
+        CALL WR_CMD
        MVI A,01H     ;LCD intilaization
-       CALL CMD
+       CALL WR_CMD
         MVI A,0CH    ;LCD intilaization
-        CALL CMD
+        CALL WR_CMD
          MVI A,80H   ;Cursor moving to top left adress of lcd
-        CALL CMD
+        CALL WR_CMD
         
           MVI A ,44H    ; "D"
            CALL WR_CHR
@@ -28,7 +28,7 @@ INIT:   MVI A,88H  ;8255 initialiaztion with upper port C input
            CALL WR_CHR
          
          MVI A,C0H      ;cursor to 2nd line left
-         CALL CMD
+         CALL WR_CMD
          MVI A ,30H
            CALL WR_CHR
            MVI A,20H 
@@ -38,7 +38,7 @@ INIT:   MVI A,88H  ;8255 initialiaztion with upper port C input
            
           HLT
 
-CMD:   OUT 81H
+WR_CMD:   OUT 81H
         MVI A,01H
         OUT 82H
        CALL DELAY1

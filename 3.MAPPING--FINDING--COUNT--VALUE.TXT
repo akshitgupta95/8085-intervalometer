@@ -28,3 +28,4 @@ FINDCOUNT:  MOV A,B                 ;Count in B
 			Lxi h,8000              ;at 8000h, mapping table
             Mov l,a
 		    Mov a,m                 ;FINAL count FOR 8254 in AC
+		    MOV B,A 				;FINAL count FOR 8254 Stored in B
