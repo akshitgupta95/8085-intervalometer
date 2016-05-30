@@ -1,0 +1,220 @@
+#BEGIN 0000H
+  
+    LXI SP,0FFFFH
+
+INIT:   MVI A,88H  ;8255 initialiaztion with upper port C input
+        OUT 83H
+        MVI A,38H  ;LCD intilaization
+        CALL WR_CMD
+        MVI A,38H   ;LCD intilaization
+        CALL WR_CMD
+        MVI A,38H   ;LCD intilaization
+        CALL WR_CMD
+       MVI A,01H     ;LCD intilaization
+       CALL WR_CMD
+        MVI A,0CH    ;LCD intilaization
+        CALL WR_CMD
+         MVI A,80H   ;Cursor moving to top left adress of lcd
+        CALL WR_CMD
+        
+          MVI A ,44H    ; "D"
+           CALL WR_CHR
+           MVI A,45H      ;"E"
+           CALL WR_CHR
+           MVI A,4CH      ; "L"
+           CALL WR_CHR
+           MVI A,41H 
+           CALL WR_CHR
+           MVI A,59H      ;"Y"
+           CALL WR_CHR  
+           MVI A,3AH      ;"
+           CALL WR_CHR
+         
+         MVI A,C0H      ;cursor to 2nd line left
+         CALL WR_CMD
+         MVI A ,30H
+           CALL WR_CHR
+           MVI A,20H 
+           CALL WR_CHR
+           MVI A,53H 
+           CALL WR_CHR
+           
+          JMP BUTTON
+
+WR_CMD:   OUT 81H
+        MVI A,01H
+        OUT 82H
+       CALL DELAY1
+        MVI A,00H
+        OUT 82H
+        CALL DELAY1
+        RET
+        
+WR_CHR: OUT 81H
+        MVI A,03H
+        OUT 82H
+       CALL DELAY1       
+        MVI A,02H
+        OUT 82H
+        CALL DELAY1
+        RET
+
+DELAY1:PUSH B
+ MVI C,8CH
+LOOP_1: DCR C
+        JNZ LOOP_1
+POP B
+        RET
+
+DELAY2:PUSH B
+ MVI C,4CH
+LOOP_2: DCR C
+        JNZ LOOP_2
+POP B
+        RET
+
+
+BUTTON:MVI B,00H 
+BACK:IN 82H
+CALL DELAY2
+CPI 72H
+JZ NEXTSTEP
+CPI E2H
+JNZ BACK
+INR B
+MVI A,C0H
+CALL WR_CMD 
+MOV A,B
+CALL DEKHA
+WAIT:IN 82H
+CPI E2H
+JZ WAIT
+JMP BACK
+
+DEKHA:PUSH B
+PUSH D
+MVI C, 0AH
+MVI D,00H
+STEP2: CMP C                
+       JC STEP3                
+       SUB C                        
+       INR D                        
+       JMP STEP2                
+STEP3:MOV E,A
+MOV A,D
+ADI 30H
+CALL WR_CHR
+MOV A,E
+ADI 30H
+CALL WR_CHR
+POP D
+POP B
+RET
+
+NEXTSTEP:;call main delay and output
+          
+          MVI A,01H
+           CALL WR_CMD   
+           MVI A,80H
+         CALL WR_CMD
+         MVI A ,53H    ; "S"
+           CALL WR_CHR
+           MVI A,48H      ;"h"
+           CALL WR_CHR
+           MVI A,4FH      ; "o"
+           CALL WR_CHR
+           MVI A,54H 
+           CALL WR_CHR
+           MVI A,53H      ;"Y"
+           CALL WR_CHR  
+           MVI A,3AH      ;"
+           CALL WR_CHR
+CALL DELAY_0_5S
+           MVI C,00H 
+BACK1:IN 82H
+CALL DELAY2
+CPI 72H
+JZ NEXT
+CPI E2H
+JNZ BACK1
+INR C
+MVI A,C0H
+CALL WR_CMD 
+MOV A,C
+CALL DEKHA
+WAIT:IN 82H
+CPI E2H
+JZ WAIT
+JMP BACK1
+
+NEXT:
+CALL RUNNING
+MOV E,B
+
+
+LOOP:MOV B,E
+CALL SECONDS
+MOV B,E
+CALL SECONDS
+CALL SHOW
+JMP LOOP
+
+
+SHOW: 
+         MVI A,01H   ;Focus first
+         OUT 80H      ;Port A
+        CALL DELAY_0_5S     ;Software Delay
+         MVI A,00H      
+         OUT 80H
+         MVI A,00000010B  ;CLick
+         OUT 80H
+         CALL DELAY_0_5S     ;Software Delay
+         MVI A,00H      
+         OUT 80H
+         RET
+
+SECONDS:   
+CALL DELAY_0_5S
+DCR B
+JNZ SECONDS
+RET
+
+DELAY_CAM: MVI C,FFH
+LOOP_3: DCR C
+        JNZ LOOP_3
+        RET
+
+DELAY_0_5S: PUSH D
+LXI D,A2C2H
+DEL:DCX D
+MOV A,D
+ORA E
+JNZ DEL
+POP D
+      RET
+
+RUNNING:MVI A,01H
+           CALL WR_CMD   
+           MVI A,80H
+         CALL WR_CMD
+  MVI A,52H 
+  CALL WR_CHR
+  MVI A,55H 
+           CALL WR_CHR
+            MVI A,4EH 
+           CALL WR_CHR
+           MVI A,4EH 
+           CALL WR_CHR
+           MVI A,49H 
+           CALL WR_CHR
+          MVI A,4EH 
+           CALL WR_CHR
+          MVI A,47H 
+           CALL WR_CHR
+  RET
+
+           
+STOP:HLT  
+
+
+    #END
