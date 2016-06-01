@@ -14,7 +14,7 @@ OUTPUT:
          CALL DELAY        ;Software Delay
          MVI A,00H			
          OUT 80H
-         MVI A,00000010B  ;CLick
+         MVI A,00000010B  ;Click
          OUT 80H
          CALL DELAY     ;Software Delay
          MVI A,00H			

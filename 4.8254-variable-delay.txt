@@ -1,7 +1,7 @@
 8254DELAY_1s: MVI A,01110100B   ;counter 1 clock made
-		OUT 43H				;Control word adress
+		OUT 43H				;Control word address
 		MVI A,010010100B	;counter 2 
-		OUT 43H				;Control word adress
+		OUT 43H				;Control word address
 		MVI A,50H           ;counter 1 low order bit count
 		OUT 41H
 		MVI A,C3H 			;counter 1 high order bit,total count of counter 1=50,000
