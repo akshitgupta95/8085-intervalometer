@@ -1,0 +1,167 @@
+#BEGIN 0000H
+	
+		LXI SP,0FFFFH
+
+INIT:   MVI A,88H  ;8255 initialiaztion with upper port C input
+        OUT 83H
+        MVI A,38H  ;LCD intilaization
+        CALL WR_CMD
+        MVI A,38H   ;LCD intilaization
+        CALL WR_CMD
+        MVI A,38H   ;LCD intilaization
+        CALL WR_CMD
+       MVI A,01H     ;LCD intilaization
+       CALL WR_CMD
+        MVI A,0CH    ;LCD intilaization
+        CALL WR_CMD
+         MVI A,80H   ;Cursor moving to top left adress of lcd
+        CALL WR_CMD
+        
+          MVI A ,44H    ; "D"
+           CALL WR_CHR
+           MVI A,45H      ;"E"
+           CALL WR_CHR
+           MVI A,4CH      ; "L"
+           CALL WR_CHR
+           MVI A,41H 
+           CALL WR_CHR
+           MVI A,59H      ;"Y"
+           CALL WR_CHR  
+           MVI A,3AH      ;"
+           CALL WR_CHR
+         
+         MVI A,C0H      ;cursor to 2nd line left
+         CALL WR_CMD
+         MVI A ,30H
+           CALL WR_CHR
+           MVI A,20H 
+           CALL WR_CHR
+           MVI A,53H 
+           CALL WR_CHR
+           
+          JMP BUTTON
+
+WR_CMD:   OUT 81H
+        MVI A,01H
+        OUT 82H
+       CALL DELAY1
+        MVI A,00H
+        OUT 82H
+        CALL DELAY1
+        RET
+        
+WR_CHR: OUT 81H
+        MVI A,03H
+        OUT 82H
+       CALL DELAY1       
+        MVI A,02H
+        OUT 82H
+        CALL DELAY1
+        RET
+
+DELAY1: MVI C,8CH
+LOOP_1: DCR C
+        JNZ LOOP_1
+        RET
+
+DELAY2: MVI C,4CH
+LOOP_2: DCR C
+        JNZ LOOP_2
+        RET
+
+
+BUTTON:MVI B,30H 
+BACK:IN 82H
+CALL DELAY2
+CPI 72H
+JZ NEXTSTEP
+CPI E2H
+JNZ BACK
+INR B
+MVI A,C0H
+CALL WR_CMD 
+MOV A,B
+CALL WR_CHR
+
+WAIT:IN 82H
+CPI E2H
+JZ WAIT
+JMP BACK
+
+NEXTSTEP:;call delay of timer a no. of times.
+SUI B,30H
+MOV E,B
+
+
+LOOP:MOV B,E
+CALL SECONDS
+CALL OUTPUT
+JMP LOOP
+
+
+OUTPUT: 
+         MVI A,00000001B   ;Focus first
+         OUT 80H      ;Port A
+            
+         
+         MVI A,00000010B  ;CLick
+         OUT 80H
+         CALL DELAY1     ;Software Delay
+         MVI A,00H      
+         OUT 80H
+         RET
+
+SECONDS:   
+CALL DELAY_1S
+DCR B
+JNZ SECONDS
+RET
+
+
+DELAY_1S: MVI A,01110100B   ;counter 1 clock made
+    OUT 43H       ;Control word adress
+    MVI A,010010100B  ;counter 2 
+    OUT 43H       ;Control word adress
+    MVI A,50H           ;counter 1 low order bit count
+    OUT 41H
+    MVI A,C3H       ;counter 1 high order bit,total count of counter 1=50,000
+    OUT 41H
+    MVI A,28H            ;Counter 2 +counter 1 =1s delay
+    OUT 42H
+READ:   MVI A,80H
+      OUT 43H
+      IN 42H
+      MOV D,A
+      IN 82H
+      ORA D
+      JNZ READ
+      RET
+
+DISPLAY:MVI A,01H
+           CALL WR_CMD   
+           MVI A,80H
+         CALL WR_CMD
+	MVI A,52H 
+ 	CALL WR_CHR
+	MVI A,55H 
+           CALL WR_CHR
+            MVI A,4EH 
+           CALL WR_CHR
+           MVI A,4EH 
+           CALL WR_CHR
+           MVI A,49H 
+           CALL WR_CHR
+          MVI A,4EH 
+           CALL WR_CHR
+          MVI A,47H 
+           CALL WR_CHR
+
+	CALL DELAY2
+JMP DISPLAY
+
+
+           
+STOP:HLT	
+
+
+		#END
